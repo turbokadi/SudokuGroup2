@@ -41,7 +41,7 @@ Groupe2 promo 2016
   - On fait un header (en Anglais) avec au minimum l'auteur et la date initiale, Ex a peut prés complet :
 
 
-      - //-- Create by J4BB3R<johanmaurel@gmail.com>; --//
+      - //-- Create by J4BB3R<<johanmaurel@gmail.com>>; --//
       - [Contributors] none;
       - [Initial Date] : 08/12/2016
       - [Last Date] : 09/12/2016
