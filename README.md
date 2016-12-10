@@ -3,7 +3,7 @@ Groupe2 promo 2016
 
 # Régles relative à Git
   - On bosse sur des branches, pas de glands sur le master
-  - Et commite pas dessus sauf si vous savais se que vous faite...
+  - On commite pas dessus sauf si vous savais se que vous faite...
   - Sous Linux si possible, Git sous windows ça marche pas top (Et sa viens pas de Git ... MicroPenis sa pue)
 
 # Cycle de production typique
@@ -47,16 +47,13 @@ Groupe2 promo 2016
 
   - On fait un header (en Anglais) avec au minimum l'auteur et la date initiale, Ex a peut prés complet :
 
-      /**
-       *
-       *   //-- Create by J4BB3R<johanmaurel@gmail.com>; --//
-       *
-       *   [Contributors] none;
-       *   [Initial Date] : 08/12/2016
-       *   [Last Date] : 09/12/2016
-       *   [Description] :
-       *      This class is the game view;
-       *   [Increments] :
-       *      - 09/12/2016 [v0.1] : Creation of the views;
-       *
-      **/
+       
+      //-- Create by J4BB3R<johanmaurel@gmail.com>; --//
+
+      [Contributors] none;
+      [Initial Date] : 08/12/2016
+      [Last Date] : 09/12/2016
+      [Description] :
+           This class is the game view;
+      [Increments] :
+           - 09/12/2016 [v0.1] : Creation of the views;
