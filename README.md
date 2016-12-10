@@ -24,17 +24,17 @@ Groupe2 promo 2016
 
   - On essaye de repérer les groupes d'attributs et on nomme leurs utilisations dans le code Ex :
 
-      // Component Configuration Attribute
-      private final static int gridPanelOffsetWidth = 63, gridPanelOffsetHeight = 63;
-      private final static int gridPanelWidth = 274, gridPanelHeight = 274;
+      - // Component Configuration Attribute
+      - private final static int gridPanelOffsetWidth = 63, gridPanelOffsetHeight = 63;
+      - private final static int gridPanelWidth = 274, gridPanelHeight = 274;
 
   - On fait pareil pour des méthodes ambigues ou groupes de méthodes indigestes Ex :
 
-      // Grib Panel Instanciation;
-      gridPanel = new JPanel();
-      gridPanel.setName("gridPanel");
-      gridPanel.setLocation(new Point(gridPanelOffsetWidth,gridPanelOffsetHeight));
-      gridPanel.setSize(gridPanelWidth, gridPanelHeight);
+      - // Grib Panel Instanciation;
+      - gridPanel = new JPanel();
+      - gridPanel.setName("gridPanel");
+      - gridPanel.setLocation(new Point(gridPanelOffsetWidth,gridPanelOffsetHeight));
+      - gridPanel.setSize(gridPanelWidth, gridPanelHeight);
 
   - On ne créer pas de variables quand c'est pas utile, sa surcharge pour rien
 
