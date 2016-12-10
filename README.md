@@ -41,9 +41,9 @@ Groupe2 promo 2016
   - Les longues méthodes on reviens a ligne pour chaque paramétres EX:
 
       - Object.method(param1,
-      -              param2,
-      -              param3,
-      -              param4);
+                    - param2,
+                    - param3,
+                    - param4);
 
   - On fait un header (en Anglais) avec au minimum l'auteur et la date initiale, Ex a peut prés complet :
 
