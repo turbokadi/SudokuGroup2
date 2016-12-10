@@ -40,20 +40,19 @@ Groupe2 promo 2016
 
   - Les longues méthodes on reviens a ligne pour chaque paramétres EX:
 
-      Object.method(param1,
-                    param2,
-                    param3,
-                    param4);
+      - Object.method(param1,
+      -              param2,
+      -              param3,
+      -              param4);
 
   - On fait un header (en Anglais) avec au minimum l'auteur et la date initiale, Ex a peut prés complet :
 
-       
-      //-- Create by J4BB3R<johanmaurel@gmail.com>; --//
 
-      [Contributors] none;
-      [Initial Date] : 08/12/2016
-      [Last Date] : 09/12/2016
-      [Description] :
-           This class is the game view;
-      [Increments] :
+      - //-- Create by J4BB3R<johanmaurel@gmail.com>; --//
+      - [Contributors] none;
+      - [Initial Date] : 08/12/2016
+      - [Last Date] : 09/12/2016
+      - [Description] :
+           - This class is the game view;
+      - [Increments] :
            - 09/12/2016 [v0.1] : Creation of the views;
