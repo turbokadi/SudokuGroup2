@@ -13,6 +13,7 @@
  
 package sudokufuzion;
 
+import sudokufuzion.Controler.GridControler;
 import sudokufuzion.Views.mainView;
 
 public class SudokuFuzion {
@@ -20,8 +21,10 @@ public class SudokuFuzion {
     public static void main(String[] args) {
         try {
             
-            // Non final !!! //
-            new mainView().setVisible(true);
+            // Non final !!!
+            GridControler gc = new GridControler();
+            mainView view = new mainView(gc);
+            view.setVisible(true);
             
         } catch (Exception e) {
             e.printStackTrace();
