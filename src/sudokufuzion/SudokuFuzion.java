@@ -1,21 +1,32 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package sudokufuzion;
-
 /**
  *
- * @author jabber
- */
+ *   //-- Create by J4BB3R<johanmaurel@gmail.com> --//
+ *
+ *   [Initial Date] : 08/12/2016
+ *   [Last Date] : 09/12/2016
+ *   [Description] :
+ *      This class is the game view;
+ *   [Increments] :
+ *      - 09/12/2016 [v0.1] : Creation of the views;
+ *
+ **/
+ 
+package sudokufuzion;
+
+import sudokufuzion.Views.mainView;
+
 public class SudokuFuzion {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        try {
+            
+            // Non final !!! //
+            new mainView().setVisible(true);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error");
+        }
     }
-    
+
 }
