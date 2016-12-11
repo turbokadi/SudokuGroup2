@@ -3,19 +3,20 @@
  *   //-- Create by J4BB3R<johanmaurel@gmail.com> --//
  *
  *   [Initial Date] : 08/12/2016
- *   [Last Date] : 09/12/2016
+ *   [Last Date] : 11/12/2016
  *   [Description] :
  *      This class is the game view;
  *   [Increments] :
  *      - 09/12/2016 [v0.1] : Creation of the views;
+ *      - 11/12/2016 [v0.2] : Adding KeyListener for the GridControler
  * 
  **/
 
 package sudokufuzion.Views;
-
 import sudokufuzion.Views.Components.GridMainPanel;
 import sudokufuzion.Views.Components.GridCase;
 import java.awt.Component;
+import sudokufuzion.Controler.GridControler;
 
 public class mainView extends javax.swing.JFrame {
 
@@ -26,15 +27,20 @@ public class mainView extends javax.swing.JFrame {
     // Instance Attribute //
     //====================//
     
-    private Component grid[][] = new Component[9][9];
+    private GridControler gc;
+    private final GridCase grid[][] = new GridCase[9][9];
     
-    public mainView() {
+    public mainView() {}
+    
+    public mainView(GridControler gc) {
+        
+        this.gc = gc;
         
         /////////////////////////////////
         //--Instanciation of the Grid--//
         /////////////////////////////////
         
-        int X = 0, Y = 0, x = 0, y = 0, valTabY = 0, valTabX = 0;
+        int X, Y, x, y, valTabY, valTabX;
         for(int i=0; i<9; i++){
             
             GridMainPanel buff = new GridMainPanel();
@@ -57,7 +63,7 @@ public class mainView extends javax.swing.JFrame {
                 caseBuff.setLocation(x,y); // Setting location
                 this.add(caseBuff);
                 
-                grid[valTabY][valTabX] =(Component) caseBuff; // Component is save into the matrix;
+                grid[valTabY][valTabX] = caseBuff; // Component is save into the matrix;
             }
             
             this.add(buff);
@@ -84,13 +90,13 @@ public class mainView extends javax.swing.JFrame {
         setTitle("SUDOKU FUZION");
         setMinimumSize(new java.awt.Dimension(400, 400));
         setSize(new java.awt.Dimension(400, 400));
-
-        panel.setBackground(new java.awt.Color(40, 40, 40));
-        panel.addKeyListener(new java.awt.event.KeyAdapter() {
+        addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                panelKeyPressed(evt);
+                formKeyPressed(evt);
             }
         });
+
+        panel.setBackground(new java.awt.Color(40, 40, 40));
 
         javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(panelLayout);
@@ -117,9 +123,9 @@ public class mainView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void panelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panelKeyPressed
-        System.out.println(evt.getKeyCode());
-    }//GEN-LAST:event_panelKeyPressed
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        gc.addToTasksQueue(evt.getKeyCode()); // Push KeyEvent into the controler
+    }//GEN-LAST:event_formKeyPressed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -146,10 +152,8 @@ public class mainView extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new mainView().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new mainView().setVisible(true);
         });
     }
 
