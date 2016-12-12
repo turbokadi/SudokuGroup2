@@ -1,4 +1,5 @@
 /**
+
  * //--Create by nico <nicolascorronel@gmail.com>;--//
  * [Contributors] none;
  * [Initial Date]: 09/12/2016
@@ -7,35 +8,36 @@
  *      - This class is the Grid of the Sudoku;
  * [Increments]:
  *      - 09/12/2016[v0.1]: Creation of basic method
+ 
  */
+ 
 package sudokufuzion.Modele;
+import java.awt.Point;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
     // Grid 
-    public int[][] matrix = {{0,2,3,0,0,0,0,6,0},
-                             {0,0,0,0,0,0,0,8,0},
-                             {0,4,0,3,2,9,0,0,7},
-                             {0,0,0,7,0,0,6,0,9},
-                             {0,8,2,0,0,6,0,4,0},
-                             {6,0,0,0,3,0,5,1,0},
-                             {9,0,5,0,0,1,0,0,2},
-                             {0,0,0,2,0,0,0,3,0},
-                             {0,1,0,0,8,0,9,0,0}};
-    
+    private int[][] matrix =   {{0,2,3,0,0,0,0,6,0},
+                                {0,0,0,0,0,0,0,8,0},
+                                {0,4,0,3,2,9,0,0,7},
+                                {0,0,0,7,0,0,6,0,9},
+                                {0,8,2,0,0,6,0,4,0},
+                                {6,0,0,0,3,0,5,1,0},
+                                {9,0,5,0,0,1,0,0,2},
+                                {0,0,0,2,0,0,0,3,0},
+                                {0,1,0,0,8,0,9,0,0}}; ;
+    private final int[][] initialMatrix;
+       
     // Difficulty configuration
     public static final int EASY = 0, MEDIUM = 1, HARD = 2;
-    public static List list = new ArrayList();
+    private static List list = new ArrayList();
     
     
     
     public Grid(){
-        //this.matrix = new int[9][9];
-        for(int i=1;i<10;i++){
-            list.add(i);
-        }
+        initialMatrix=matrix.clone();
     }
     
     //Méthode pour récuperer la valeur d'une case
@@ -45,21 +47,32 @@ public class Grid {
         else{ System.out.println("Wrong value"); return -1;}
     }
     
+    public int[][] getGrid(){
+        return matrix;
+    }
+    
+    public boolean verifyInitialValue(Point pt){ 
+        if(initialMatrix[pt.y][pt.x]!=0){
+            return true;
+        }
+        return false;
+    }
+    
+    
     //Méthode pour incrire un numero dans une case
     public void setCase(int x, int y, int value){
         if(x<9 && y<9 && x>-1 && y >-1 && value<10 && value>0)
         {
-            //this.DetectError(x, y, value);
-            matrix[y][x]= value;
+            if(!this.DetectError(x, y, value)){ matrix[y][x]= value; }
         }
         else{ System.out.println("Wrong value");}
     }
-    public void fillGridTemp(){
 
-        
-        
-    }
     public void fillGrid(int diff){
+        
+        for(int i=1;i<10;i++){
+            list.add(i);
+        }
         Collections.shuffle(list);
         List list0 = new ArrayList();
         List list1 = new ArrayList();
@@ -100,9 +113,31 @@ public class Grid {
                 setCase(i+3*(1+j),j+3,(int)list2.get(i));
             }
         }
+        list0.clear();list1.clear();list2.clear();
+        for(int x=3;x<9;x++) {
+            for(int y=0;y<3;y++){
+                for(int j=1;j<10;j++){
+                    if(!this.DetectError(x, y, j)){
+                        setCase(x,y,j);
+                    }
+                }
+            }
+        }
+        for(int x=3;x<9;x++) {
+            for(int y=6;y<9;y++){
+                for(int j=1;j<10;j++){
+                    if(!this.DetectError(x, y, j)){
+                        setCase(x,y,j);
+                    }
+                }
+            }
+        }
+        
+        Collections.shuffle(list0);
         System.out.println(list0);
-        System.out.println(list1);
-        System.out.println(list2);
+        Collections.sort(list0);
+        System.out.println(list0);
+
     }
     public boolean DetectError(int X, int Y, int val){
         boolean ret = false;
