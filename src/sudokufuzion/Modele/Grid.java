@@ -15,17 +15,24 @@ import java.util.List;
 
 public class Grid {
     // Grid 
-    public int[][] matrix = null;
+    public int[][] matrix = {{0,2,3,0,0,0,0,6,0},
+                             {0,0,0,0,0,0,0,8,0},
+                             {0,4,0,3,2,9,0,0,7},
+                             {0,0,0,7,0,0,6,0,9},
+                             {0,8,2,0,0,6,0,4,0},
+                             {6,0,0,0,3,0,5,1,0},
+                             {9,0,5,0,0,1,0,0,2},
+                             {0,0,0,2,0,0,0,3,0},
+                             {0,1,0,0,8,0,9,0,0}};
     
     // Difficulty configuration
     public static final int EASY = 0, MEDIUM = 1, HARD = 2;
-    //public static final int[] digit = new int[] {1,2,3,4,5,6,7,8,9};
     public static List list = new ArrayList();
     
     
     
     public Grid(){
-        this.matrix = new int[9][9];
+        //this.matrix = new int[9][9];
         for(int i=1;i<10;i++){
             list.add(i);
         }
@@ -46,6 +53,11 @@ public class Grid {
             matrix[y][x]= value;
         }
         else{ System.out.println("Wrong value");}
+    }
+    public void fillGridTemp(){
+
+        
+        
     }
     public void fillGrid(int diff){
         Collections.shuffle(list);
@@ -72,6 +84,25 @@ public class Grid {
                 if(x>5){        setCase(i,T,(int)list1.get(T%3));}
             }
         }
+        list0.clear();list1.clear();list2.clear();
+        for(int i=0; i<3;i++){
+            list0.add(matrix[3][i]);
+            list1.add(matrix[4][i]);
+            list2.add(matrix[5][i]);
+        }
+        for(int j=0; j<2; j++){
+            Collections.shuffle(list0);
+            Collections.shuffle(list1);
+            Collections.shuffle(list2);
+            for(int i=0; i<3;i++){
+                setCase(i+3*(1+j),j+4,(int)list0.get(i));
+                setCase(i+3*(1+j),5-j*2,(int)list1.get(i));
+                setCase(i+3*(1+j),j+3,(int)list2.get(i));
+            }
+        }
+        System.out.println(list0);
+        System.out.println(list1);
+        System.out.println(list2);
     }
     public boolean DetectError(int X, int Y, int val){
         boolean ret = false;
