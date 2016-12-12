@@ -25,6 +25,7 @@ public class SudokuFuzion {
             GridControler gc = new GridControler();
             mainView view = new mainView(gc);
             view.setVisible(true);
+            gc.runControler();
             
         } catch (Exception e) {
             e.printStackTrace();
