@@ -124,7 +124,7 @@ public class mainView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        gc.addToTasksQueue(evt.getKeyCode()); // Push KeyEvent into the controler
+        gc.addToTasksQueue(evt); // Push KeyEvent into the controler
     }//GEN-LAST:event_formKeyPressed
 
     public static void main(String args[]) {
