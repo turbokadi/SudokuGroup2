@@ -9,21 +9,29 @@
  *   [Increments] :
  *      - 09/12/2016 [v0.1] : Creation of the Class + main method;
  *      - 11/12/2016 [v0.2] : Adding Taskthread
+ *      - 12/12/2016 [v0.3] : Adding focus movement gesture
  *
  **/
 
 package sudokufuzion.Controler;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import sudokufuzion.Controler.GridEvents.Case;
+import sudokufuzion.Controler.GridEvents.ChangeValueEvent;
+import sudokufuzion.Controler.GridEvents.MoveFocusEvent;
+import sudokufuzion.Modele.Grid;
 
-public class GridControler {
+public class GridControler extends Observable{
     
     // Thread Runnable Declaration
     private final Runnable th = new Runnable() {
         @Override
         public void run() {
-            long i=0;
+            setChanged();
+            notifyObservers(new ChangeValueEvent().putGridIntoArrayList(grid));
             while (true) {
                 try {
                     if(queue.isEmpty()) synchronized (Th) { Th.wait(); }
@@ -39,8 +47,10 @@ public class GridControler {
     // Instance Attributes //
     //====================//    
     
+    private Point focusedCase;
     private ConcurrentLinkedQueue<KeyEvent> queue;
     private final Thread Th = new Thread(th);
+    private final Grid grid = new Grid();
     
     public GridControler() {
         this.queue = new ConcurrentLinkedQueue<>();
@@ -69,22 +79,29 @@ public class GridControler {
             int val = evt.getKeyCode();
             
             if(val >= KeyEvent.VK_NUMPAD1 && val <= KeyEvent.VK_NUMPAD9) {
-                System.out.println("Vous avez Appuiez sur "+ (val-KeyEvent.VK_NUMPAD0));
+                this.setChanged();
+                ChangeValueEvent ev = new ChangeValueEvent();
+                ev.add(new Case(this.focusedCase.x, this.focusedCase.y, val - KeyEvent.VK_NUMPAD0));
+                this.notifyObservers(ev);
             } 
             else if(val >= KeyEvent.VK_LEFT && val <= KeyEvent.VK_DOWN){
                               
                 switch (val) {
                     case KeyEvent.VK_UP : 
-                        System.out.println("Vous avez Appuiez sur UP");
+                        this.setChanged();
+                        this.notifyObservers(new MoveFocusEvent().setMoveUp());
                     break;
                     case KeyEvent.VK_DOWN :
-                        System.out.println("Vous avez Appuiez sur DOWN");
+                        this.setChanged();
+                        this.notifyObservers(new MoveFocusEvent().setMoveDown());
                     break;
                     case KeyEvent.VK_RIGHT :
-                        System.out.println("Vous avez Appuiez sur RIGHT");
+                        this.setChanged();
+                        this.notifyObservers(new MoveFocusEvent().setMoveRight());
                     break;
                     case KeyEvent.VK_LEFT :
-                        System.out.println("Vous avez Appuiez sur LEFT");
+                        this.setChanged();
+                        this.notifyObservers(new MoveFocusEvent().setMoveLeft());
                     break;
                     default :
                 }
@@ -94,5 +111,7 @@ public class GridControler {
             e.printStackTrace();
         }
     }
+    
+    public void setFocusedCase(Point pt) { this.focusedCase = pt; }
     
 }

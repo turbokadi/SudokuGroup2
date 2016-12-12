@@ -24,6 +24,7 @@ public class SudokuFuzion {
             // Non final !!!
             GridControler gc = new GridControler();
             mainView view = new mainView(gc);
+            gc.addObserver(view);
             view.setVisible(true);
             gc.runControler();
             
