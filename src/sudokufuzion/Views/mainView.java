@@ -15,20 +15,31 @@
 package sudokufuzion.Views;
 import sudokufuzion.Views.Components.GridMainPanel;
 import sudokufuzion.Views.Components.GridCase;
-import java.awt.Component;
+import java.awt.Point;
+import java.util.Observable;
+import java.util.Observer;
 import sudokufuzion.Controler.GridControler;
+import sudokufuzion.Controler.GridEvents.Case;
+import sudokufuzion.Controler.GridEvents.ChangeValueEvent;
+import sudokufuzion.Controler.GridEvents.MoveFocusEvent;
 
-public class mainView extends javax.swing.JFrame {
+public class mainView extends javax.swing.JFrame implements Observer{
 
-    // Panel Config
+    // Panel Configuration
     private final static int LOCATION_X = 57, LOCATION_Y = 57;
+    
+    // Moving Focus Configuration
+    private final static int GRID_SIZE = 9;
+    private final static int SUB_GRID_SIZE = 3;
+    public final static int UP = 0, DOWN = 2, LEFT = -1, RIGHT = 1, ERROR = -2;
     
     //====================//
     // Instance Attribute //
     //====================//
     
     private GridControler gc;
-    private final GridCase grid[][] = new GridCase[9][9];
+    private final GridCase grid[][] = new GridCase[GRID_SIZE][GRID_SIZE];
+    private final Point focusedCase = new Point(0,0);
     
     public mainView() {}
     
@@ -41,24 +52,24 @@ public class mainView extends javax.swing.JFrame {
         /////////////////////////////////
         
         int X, Y, x, y, valTabY, valTabX;
-        for(int i=0; i<9; i++){
+        for(int i=0; i < GRID_SIZE; i++){
             
             GridMainPanel buff = new GridMainPanel();
-            X = LOCATION_X + buff.getWidth()*(i%3); // Calculate position of the containerGrid
-            Y = LOCATION_Y + buff.getHeight()*(i/3); // Calculate position of the containerGrid
+            X = LOCATION_X + buff.getWidth()*(i%SUB_GRID_SIZE); // Calculate position of the containerGrid
+            Y = LOCATION_Y + buff.getHeight()*(i/SUB_GRID_SIZE); // Calculate position of the containerGrid
             buff.setLocation(X,Y);
             GridCase c = new GridCase();
             
-            for (int z=0; z<9; z++) {
+            for (int z=0; z < GRID_SIZE; z++) {
                 
-                valTabY = z/3 + 3*(i/3); // Calculate the index value into the tab
-                valTabX = z%3 + 3*(i%3); // Calculate the index value into the tab
+                valTabY = z/SUB_GRID_SIZE + SUB_GRID_SIZE*(i/SUB_GRID_SIZE); // Calculate the index value into the tab
+                valTabX = z%SUB_GRID_SIZE + SUB_GRID_SIZE*(i%SUB_GRID_SIZE); // Calculate the index value into the tab
                 
                 GridCase caseBuff = new GridCase();
                 caseBuff.setName("case["+valTabY+"]["+valTabX+"]");
                 
-                x = X + caseBuff.getWidth()*(z%3) + GridMainPanel.BORDER_SIZE; // Calculate position compare to the parentGrid relative position 
-                y = Y + caseBuff.getHeight()*(z/3) + GridMainPanel.BORDER_SIZE; // Calculate position compare to the parentGrid relative position 
+                x = X + caseBuff.getWidth()*(z%SUB_GRID_SIZE) + GridMainPanel.BORDER_SIZE; // Calculate position compare to the parentGrid relative position 
+                y = Y + caseBuff.getHeight()*(z/SUB_GRID_SIZE) + GridMainPanel.BORDER_SIZE; // Calculate position compare to the parentGrid relative position 
                 
                 caseBuff.setLocation(x,y); // Setting location
                 this.add(caseBuff);
@@ -68,9 +79,10 @@ public class mainView extends javax.swing.JFrame {
             
             this.add(buff);
         }
-        
-        
-        
+      
+        focusedCase.setLocation(0,0);
+        gc.setFocusedCase(focusedCase);
+        grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
         
         initComponents();
     }
@@ -156,8 +168,70 @@ public class mainView extends javax.swing.JFrame {
             new mainView().setVisible(true);
         });
     }
+    
+    public void moveFocus(int Move) {
+        try {
+            GridCase gc;
+            switch (Move) {
+                case UP :
+                    gc = grid[focusedCase.y][focusedCase.x];
+                    gc.setState(gc.getPreviousState());
+                    if(focusedCase.y == 0) focusedCase.y = GRID_SIZE - 1;
+                    else focusedCase.y--;
+                    grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
+                break;
+                case DOWN :
+                    gc = grid[focusedCase.y][focusedCase.x];
+                    gc.setState(gc.getPreviousState());
+                    if(focusedCase.y == GRID_SIZE - 1) focusedCase.y = 0;
+                    else focusedCase.y++;
+                    grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
+                break;
+                case LEFT :
+                    gc = grid[focusedCase.y][focusedCase.x];
+                    gc.setState(gc.getPreviousState());
+                    if(focusedCase.x == 0) focusedCase.x = GRID_SIZE - 1;
+                    else focusedCase.x--;
+                    grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
+                break;
+                case RIGHT :
+                    gc = grid[focusedCase.y][focusedCase.x];
+                    gc.setState(gc.getPreviousState());
+                    if(focusedCase.x == GRID_SIZE - 1) focusedCase.x = 0;
+                    else focusedCase.x++;
+                    grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
+                break;
+                default :
+                    throw(new Exception(new Throwable("[mainView] MovingFocus Error unknow command.")));
+            } this.gc.setFocusedCase(focusedCase);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(Observable o, Object o1) {
+        
+        if ( o1 instanceof MoveFocusEvent ) moveFocus(((MoveFocusEvent) o1).getMove());
+        else if ( o1 instanceof ChangeValueEvent) setValueIntoCase((ChangeValueEvent) o1);
+        
+    }
+
+    private void setValueIntoCase(ChangeValueEvent evt) {
+        GridCase g;
+        for (Case c: evt) {
+            if (c.value != 0) {
+                if (c.getInitial()) {
+                    g = grid[c.y][c.x];
+                    g.setText(String.valueOf(c.value));
+                    g.setForeground(GridCase.NON_MODIFABLE_COLOR);
+                } else grid[c.y][c.x].setText(String.valueOf(c.value));
+            }
+        }
+    }
+    
 }

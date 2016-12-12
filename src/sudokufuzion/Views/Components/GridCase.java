@@ -30,7 +30,8 @@ public class GridCase extends JTextField {
     
     //Color Normalized
     private static final Color BASE_COLOR = new Color(120,120,120,255);
-    private static final Color FOCUS_COLOR = new Color(58,134,236,255);
+    public static final Color NON_MODIFABLE_COLOR = new Color(0,50,126,255);
+    private static final Color FOCUS_COLOR = new Color(0,150,255,255);
     private static final Color ERROR_COLOR = new Color(232,35,35,255);
     
     // Border Configuration
@@ -45,6 +46,7 @@ public class GridCase extends JTextField {
     // Instance Attribute //
     //====================//
       
+    private int previousState = GridCase.BASE;
     private int State;
     
     public GridCase() {
@@ -69,14 +71,17 @@ public class GridCase extends JTextField {
         try {
             switch (State) {
                 case GridCase.BASE :
+                    this.previousState = this.State;
                     this.setBorder(GridCase.BASE_BORDER);
                     this.State = GridCase.BASE;
                 break;
                 case GridCase.FOCUS :
+                    this.previousState = this.State;
                     this.setBorder(GridCase.FOCUS_BORDER);
                     this.State = GridCase.FOCUS;
                 break;
                 case GridCase.ERROR :
+                    this.previousState = this.State;
                     this.setBorder(GridCase.ERROR_BORDER);
                     this.State = GridCase.ERROR;
                 break;
@@ -89,5 +94,7 @@ public class GridCase extends JTextField {
     }
     
     final public int getState() { return State; }
+    
+    final public int getPreviousState() { return previousState; }
         
 }
