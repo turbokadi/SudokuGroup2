@@ -1,28 +1,36 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package sudokufuzion;
-import sudokufuzion.Modele.Grid;
 /**
  *
- * @author jabber
- */
+ *   //-- Create by J4BB3R<johanmaurel@gmail.com> --//
+ *
+ *   [Initial Date] : 08/12/2016
+ *   [Last Date] : 09/12/2016
+ *   [Description] :
+ *      This class is the game view;
+ *   [Increments] :
+ *      - 09/12/2016 [v0.1] : Creation of the views;
+ *
+ **/
+ 
+package sudokufuzion;
+
+import sudokufuzion.Controler.GridControler;
+import sudokufuzion.Views.mainView;
+
 public class SudokuFuzion {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        Grid mat = new Grid();
-        //mat.fillGridTemp();
-        for(int i=0; i<9 ; i++){
-            for(int j = 0; j<9; j++){
-                System.out.print("[" + mat.getCase(i, j) + "]");
-            }
-            System.out.println();
+        try {
+            
+            // Non final !!!
+            GridControler gc = new GridControler();
+            mainView view = new mainView(gc);
+            view.setVisible(true);
+            gc.runControler();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error");
         }
     }
-    
+
 }
