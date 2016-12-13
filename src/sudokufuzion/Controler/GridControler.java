@@ -17,10 +17,12 @@ package sudokufuzion.Controler;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import sudokufuzion.Controler.GridEvents.Case;
 import sudokufuzion.Controler.GridEvents.ChangeValueEvent;
+import sudokufuzion.Controler.GridEvents.ErrorEvent;
 import sudokufuzion.Controler.GridEvents.MoveFocusEvent;
 import sudokufuzion.Modele.Grid;
 
@@ -79,10 +81,27 @@ public class GridControler extends Observable{
             int val = evt.getKeyCode();
             
             if(val >= KeyEvent.VK_NUMPAD1 && val <= KeyEvent.VK_NUMPAD9) {
-                this.setChanged();
-                ChangeValueEvent ev = new ChangeValueEvent();
-                ev.add(new Case(this.focusedCase.x, this.focusedCase.y, val - KeyEvent.VK_NUMPAD0));
-                this.notifyObservers(ev);
+                if (!grid.verifyInitialValue(focusedCase)) {
+                    
+                    int keyValue = val - KeyEvent.VK_NUMPAD0; // Value of the key compare to 0 ID value
+                    
+                    this.setChanged();
+                    ChangeValueEvent ev = new ChangeValueEvent();
+                    ev.add(new Case(this.focusedCase.x, this.focusedCase.y, keyValue));
+                    this.notifyObservers(ev);
+                    
+                    ArrayList<Point> buff = grid.setCase(this.focusedCase.x, this.focusedCase.y, keyValue);
+                    
+                    if(!(buff==null)) {
+                        
+                        ErrorEvent ec = new ErrorEvent(buff);
+                        ec.setInitialCase(focusedCase);
+                        ec.remove( ec.size() - 1);
+                        this.setChanged();
+                        this.notifyObservers(ec);
+                        
+                    }
+                }
             } 
             else if(val >= KeyEvent.VK_LEFT && val <= KeyEvent.VK_DOWN){
                               

@@ -15,10 +15,12 @@ package sudokufuzion.Views.Components;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
 import java.util.Arrays;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import sudokufuzion.Controler.GridEvents.ErrorEvent;
 
 public class GridCase extends JTextField {
     
@@ -47,7 +49,13 @@ public class GridCase extends JTextField {
     //====================//
       
     private int previousState = GridCase.BASE;
+    private String previousText = "";
     private int State;
+    private ErrorEvent errorEvent;
+
+    public ErrorEvent getErrorEvent() { return errorEvent; }
+
+    public void setErrorEvent(ErrorEvent errorEvent) { this.errorEvent = errorEvent; }
     
     public GridCase() {
         this.setFocusable(false);
@@ -96,5 +104,21 @@ public class GridCase extends JTextField {
     final public int getState() { return State; }
     
     final public int getPreviousState() { return previousState; }
+    
+    public void setColorErrorInitialCase() {
+        this.setForeground(ERROR_COLOR);
+    }
+    
+    public void unsetColorErrorInitialCase() {
+        this.setForeground(BASE_COLOR);
+    }
+    
+    @Override
+    public void setText(String string) {
+        previousText = this.getText();
+        super.setText(string);
+    }
+    
+    public void setPreviousText() { this.setText(previousText); } 
         
 }

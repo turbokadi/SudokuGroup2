@@ -21,6 +21,7 @@ import java.util.Observer;
 import sudokufuzion.Controler.GridControler;
 import sudokufuzion.Controler.GridEvents.Case;
 import sudokufuzion.Controler.GridEvents.ChangeValueEvent;
+import sudokufuzion.Controler.GridEvents.ErrorEvent;
 import sudokufuzion.Controler.GridEvents.MoveFocusEvent;
 
 public class mainView extends javax.swing.JFrame implements Observer{
@@ -40,6 +41,7 @@ public class mainView extends javax.swing.JFrame implements Observer{
     private GridControler gc;
     private final GridCase grid[][] = new GridCase[GRID_SIZE][GRID_SIZE];
     private final Point focusedCase = new Point(0,0);
+    private Point errorCase;
     
     public mainView() {}
     
@@ -218,6 +220,7 @@ public class mainView extends javax.swing.JFrame implements Observer{
         
         if ( o1 instanceof MoveFocusEvent ) moveFocus(((MoveFocusEvent) o1).getMove());
         else if ( o1 instanceof ChangeValueEvent) setValueIntoCase((ChangeValueEvent) o1);
+        else if ( o1 instanceof ErrorEvent) setErrorIntoCase((ErrorEvent) o1);
         
     }
 
@@ -229,9 +232,48 @@ public class mainView extends javax.swing.JFrame implements Observer{
                     g = grid[c.y][c.x];
                     g.setText(String.valueOf(c.value));
                     g.setForeground(GridCase.NON_MODIFABLE_COLOR);
-                } else grid[c.y][c.x].setText(String.valueOf(c.value));
+                } else {
+                    this.unsetErrorIntoCase();
+                    grid[c.y][c.x].setText(String.valueOf(c.value));
+                }
             }
         }
+    }
+    
+    public void setErrorIntoCase(ErrorEvent ev) {
+        
+        this.unsetErrorIntoCase();
+        
+        Point initialCase = ev.getInitialCase();
+        errorCase = initialCase;
+        GridCase gcn = grid[errorCase.y][errorCase.x];
+        gcn.setErrorEvent(ev);
+        gcn.setColorErrorInitialCase();
+        
+        ev.stream().forEach((pt) -> {
+            grid[pt.y][pt.x].setState(GridCase.ERROR);
+        });
+        
+    }
+    
+    public void unsetErrorIntoCase() {
+        if (errorCase != null) {
+            
+            GridCase gco = grid[errorCase.y][errorCase.x];
+            gco.unsetColorErrorInitialCase();
+            gco.setPreviousText();
+            GridCase buff;
+            
+            for (Point pt : gco.getErrorEvent()) {
+                buff = grid[pt.y][pt.x];
+                buff.setState(buff.getPreviousState());
+            } 
+            
+            gco.setErrorEvent(null);
+            
+            errorCase = null;
+            
+        }        
     }
     
 }
