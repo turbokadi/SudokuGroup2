@@ -74,6 +74,7 @@ public class mainView extends javax.swing.JFrame implements Observer{
                 y = Y + caseBuff.getHeight()*(z/SUB_GRID_SIZE) + GridMainPanel.BORDER_SIZE; // Calculate position compare to the parentGrid relative position 
                 
                 caseBuff.setLocation(x,y); // Setting location
+                
                 this.add(caseBuff);
                 
                 grid[valTabY][valTabX] = caseBuff; // Component is save into the matrix;
@@ -233,7 +234,7 @@ public class mainView extends javax.swing.JFrame implements Observer{
                     g.setText(String.valueOf(c.value));
                     g.setForeground(GridCase.NON_MODIFABLE_COLOR);
                 } else {
-                    this.unsetErrorIntoCase();
+                    if (errorCase != null) this.unsetErrorIntoCase();
                     grid[c.y][c.x].setText(String.valueOf(c.value));
                 }
             }
