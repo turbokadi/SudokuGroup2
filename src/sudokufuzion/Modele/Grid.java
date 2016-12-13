@@ -27,7 +27,7 @@ public class Grid {
                                 {6,0,0,0,3,0,5,1,0},
                                 {9,0,5,0,0,1,0,0,2},
                                 {0,0,0,2,0,0,0,3,0},
-                                {0,1,0,0,8,0,9,0,0}}; ;
+                                {0,1,0,0,8,0,9,0,0}};
     private final int[][] initialMatrix;
     private final int GRID_SIZE = 9;    
     
@@ -38,16 +38,14 @@ public class Grid {
     
     
     public Grid(){
-        matrix = new int[GRID_SIZE][GRID_SIZE];
-        fillGrid(EASY);
-        initialMatrix=matrix.clone();
+        initialMatrix = matrix.clone();
     }
     
     //Méthode pour récuperer la valeur d'une case
     //étant dans la grille de coordonnées correspondant aux paramètres
     public int getCase(int x, int y){
         if(x<GRID_SIZE+1 && y<GRID_SIZE+1 && x>-1 && y >-1){return matrix[y][x];}
-        else{ System.out.println("Wrong value"); return -1;}
+        else return -1;
     }
     
     public int[][] getGrid(){
@@ -60,15 +58,26 @@ public class Grid {
     
     
     //Méthode pour incrire un numero dans une case
-    public void setCase(int x, int y, int value){
-        if(x<GRID_SIZE && y<GRID_SIZE && x>-1 && y >-1 && value<GRID_SIZE+1 && value>0)
-        {
-            if(this.DetectError(x, y, value)==null) matrix[y][x]= value;
+    public ArrayList<Point> setCase(int x, int y, int value){
+        
+        ArrayList<Point> list = new ArrayList<>();
+        try {
+            //if(x<GRID_SIZE && y<GRID_SIZE && x>-1 && y >-1 && value<GRID_SIZE+1 && value>0) {
+
+                list = this.DetectError(x, y, value);
+                if(list == null) {
+                    matrix[y][x] = value;
+                    return null;
+                }
+
+            //}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else{ System.out.println("Wrong value");}
+        return list;
     }
 
-    public void fillGrid(int diff){
+    public void fillGrid(int diff) throws Exception{
         
         for(int i=1;i<GRID_SIZE+1;i++){
             list.add(i);
@@ -92,9 +101,9 @@ public class Grid {
                 if(i==2){
                     T= (x+3)%GRID_SIZE;
                 }
-                if(x<3){        setCase(i,T,(int)list2.get(T%3));}
-                if(x>2 && x<6){ setCase(i,T,(int)list0.get(T%3));}
-                if(x>5){        setCase(i,T,(int)list1.get(T%3));}
+                if(x<3) setCase(i,T,(int)list2.get(T%3));
+                if(x>2 && x<6) setCase(i,T,(int)list0.get(T%3));
+                if(x>5) setCase(i,T,(int)list1.get(T%3));
             }
         }
         list0.clear();list1.clear();list2.clear();
@@ -140,21 +149,27 @@ public class Grid {
 
     }
     public ArrayList<Point> DetectError(int X, int Y, int val){
+
         ArrayList<Point> error = new ArrayList();
         for(int y=0; y<GRID_SIZE; y++){
             if(matrix[y][X]==val && y!=Y) error.add(new Point(X,y)); 
         }
         for(int x=0; x<GRID_SIZE; x++){
-            if(matrix[Y][x]==val && x!=X) error.add(new Point(Y,x));
+            if(matrix[Y][x]==val && x!=X) error.add(new Point(x,Y));
         }
         int offy = Y-Y%3;
         int offx = X-X%3;
         for(int y=offy; y<offy+3;y++){
             for(int x=offx; x<offx+3; x++){
-                if(matrix[y][x]==val && y!=Y && x!=X) error.add(new Point(y,x));
+                if(matrix[y][x]==val && y!=Y && x!=X) {
+                    error.add(new Point(x,y));
+                }
             }
         }
         if(error.isEmpty()) return null;
-        else return error;
+        else {
+            error.add(new Point(X,Y));
+            return error;
+        }
     }
 }
