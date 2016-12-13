@@ -38,7 +38,10 @@ public class Grid {
     
     
     public Grid(){
-        initialMatrix = matrix.clone();
+        initialMatrix = new int[GRID_SIZE][GRID_SIZE];
+        for (int y=0; y<GRID_SIZE; y++) {
+            for (int x=0; x<GRID_SIZE; x++) initialMatrix[y][x] = matrix[y][x];
+        }
     }
     
     //Méthode pour récuperer la valeur d'une case
@@ -62,7 +65,7 @@ public class Grid {
         
         ArrayList<Point> list = new ArrayList<>();
         try {
-            //if(x<GRID_SIZE && y<GRID_SIZE && x>-1 && y >-1 && value<GRID_SIZE+1 && value>0) {
+            if(x<GRID_SIZE && y<GRID_SIZE && x>-1 && y >-1 && value<GRID_SIZE+1 && value>0) {
 
                 list = this.DetectError(x, y, value);
                 if(list == null) {
@@ -70,7 +73,7 @@ public class Grid {
                     return null;
                 }
 
-            //}
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,16 +163,13 @@ public class Grid {
         int offy = Y-Y%3;
         int offx = X-X%3;
         for(int y=offy; y<offy+3;y++){
-            for(int x=offx; x<offx+3; x++){
+            for(int x=offx ; x<offx + 3; x++){
                 if(matrix[y][x]==val && y!=Y && x!=X) {
                     error.add(new Point(x,y));
                 }
             }
         }
         if(error.isEmpty()) return null;
-        else {
-            error.add(new Point(X,Y));
-            return error;
-        }
+        else return error;
     }
 }

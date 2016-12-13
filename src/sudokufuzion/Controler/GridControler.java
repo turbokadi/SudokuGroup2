@@ -85,18 +85,17 @@ public class GridControler extends Observable{
                     
                     int keyValue = val - KeyEvent.VK_NUMPAD0; // Value of the key compare to 0 ID value
                     
-                    this.setChanged();
                     ChangeValueEvent ev = new ChangeValueEvent();
                     ev.add(new Case(this.focusedCase.x, this.focusedCase.y, keyValue));
+                    this.setChanged();
                     this.notifyObservers(ev);
                     
                     ArrayList<Point> buff = grid.setCase(this.focusedCase.x, this.focusedCase.y, keyValue);
                     
-                    if(!(buff==null)) {
+                    if(buff!=null) {
                         
                         ErrorEvent ec = new ErrorEvent(buff);
-                        ec.setInitialCase(focusedCase);
-                        ec.remove( ec.size() - 1);
+                        ec.setInitialCase((Point) focusedCase.clone());
                         this.setChanged();
                         this.notifyObservers(ec);
                         
