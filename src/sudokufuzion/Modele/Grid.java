@@ -38,6 +38,8 @@ public class Grid {
     
     
     public Grid(){
+        fillGrid(EASY);
+        checkGrid();
         initialMatrix = new int[GRID_SIZE][GRID_SIZE];
         for (int y=0; y<GRID_SIZE; y++) {
             for (int x=0; x<GRID_SIZE; x++) initialMatrix[y][x] = matrix[y][x];
@@ -80,76 +82,58 @@ public class Grid {
         return list;
     }
 
-    public void fillGrid(int diff) throws Exception{
-        
-        for(int i=1;i<GRID_SIZE+1;i++){
-            list.add(i);
-        }
-        Collections.shuffle(list);
-        List list0 = new ArrayList();
-        List list1 = new ArrayList();
-        List list2 = new ArrayList();
-        for(int i=0; i<3;i++){
-            list0.add((int)list.get(i));
-            list1.add((int)list.get(i+3));
-            list2.add((int)list.get(i+6));
-        }
-        for(int i =0; i<9;i++){setCase(0,i,(int)(list.get(i)));}
-        for(int i = 1; i<3; i++){
-            Collections.shuffle(list0);
-            Collections.shuffle(list1);
-            Collections.shuffle(list2);
-            for(int x=0;x<GRID_SIZE;x++){
-                int T=x;
-                if(i==2){
-                    T= (x+3)%GRID_SIZE;
-                }
-                if(x<3) setCase(i,T,(int)list2.get(T%3));
-                if(x>2 && x<6) setCase(i,T,(int)list0.get(T%3));
-                if(x>5) setCase(i,T,(int)list1.get(T%3));
+    public void fillGrid(int diff){
+        do{ 
+            matrix = new int[9][9];
+            list.clear();
+            for(int i=1;i<GRID_SIZE+1;i++){
+                list.add(i);
             }
-        }
-        list0.clear();list1.clear();list2.clear();
-        for(int i=0; i<3;i++){
-            list0.add(matrix[3][i]);
-            list1.add(matrix[4][i]);
-            list2.add(matrix[5][i]);
-        }
-        for(int j=0; j<2; j++){
-            Collections.shuffle(list0);
-            Collections.shuffle(list1);
-            Collections.shuffle(list2);
+            Collections.shuffle(list);
+            List list0 = new ArrayList();
+            List list1 = new ArrayList();
+            List list2 = new ArrayList();
             for(int i=0; i<3;i++){
-                setCase(i+3*(1+j),j+4,(int)list0.get(i));
-                setCase(i+3*(1+j),5-j*2,(int)list1.get(i));
-                setCase(i+3*(1+j),j+3,(int)list2.get(i));
+                list0.add((int)list.get(i));
+                list1.add((int)list.get(i+3));
+                list2.add((int)list.get(i+6));
             }
-        }
-        list0.clear();list1.clear();list2.clear();
-        for(int x=3;x<GRID_SIZE;x++) {
-            for(int y=0;y<3;y++){
-                for(int j=1;j<GRID_SIZE+1;j++){
-                    if(this.DetectError(x, y, j)==null){
-                        setCase(x,y,j);
+            for(int i =0; i<9;i++){setCase(0,i,(int)(list.get(i)));}
+            for(int i = 1; i<3; i++){
+                Collections.shuffle(list0);
+                Collections.shuffle(list1);
+                Collections.shuffle(list2);
+                for(int x=0;x<GRID_SIZE;x++){
+                    int T=x;
+                    if(i==2){
+                        T= (x+3)%GRID_SIZE;
                     }
+                    if(x<3) setCase(i,T,(int)list2.get(T%3));
+                    if(x>2 && x<6) setCase(i,T,(int)list0.get(T%3));
+                    if(x>5) setCase(i,T,(int)list1.get(T%3));
                 }
             }
-        }
-        for(int x=3;x<GRID_SIZE;x++) {
-            for(int y=6;y<GRID_SIZE;y++){
-                for(int j=1;j<GRID_SIZE+1;j++){
-                    if(this.DetectError(x, y, j)==null){
-                        setCase(x,y,j);
-                    }
+            list0.clear();list1.clear();list2.clear();
+            for(int i=0; i<3;i++){
+                list0.add(matrix[6][i]);
+                list1.add(matrix[7][i]);
+                list2.add(matrix[8][i]);
+            }
+            for(int j=0; j<2; j++){
+                Collections.shuffle(list0);
+                Collections.shuffle(list1);
+                Collections.shuffle(list2);
+                for(int i=0; i<3;i++){
+                    setCase(i+3*(1+j),j+7,(int)list0.get(i));
+                    setCase(i+3*(1+j),8-j*2,(int)list1.get(i));
+                    setCase(i+3*(1+j),j+6,(int)list2.get(i));
                 }
             }
-        }
-        
-        Collections.shuffle(list0);
-        System.out.println(list0);
-        Collections.sort(list0);
-        System.out.println(list0);
+            list0.clear();list1.clear();list2.clear();list.clear();
+            GenCase(4,1); GenCase(7,4); GenCase(5,2);
 
+            fillEndGrid();
+        }while(!gridFull());
     }
     public ArrayList<Point> DetectError(int X, int Y, int val){
 
@@ -171,5 +155,126 @@ public class Grid {
         }
         if(error.isEmpty()) return null;
         else return error;
+    }
+    
+    public int nbOccurenceCase(int x, int y){
+        
+        int nb=0;
+        
+        for(int digit=1; digit<GRID_SIZE+1;digit++){
+            
+            if(DetectError(x, y, digit)==null) nb++;
+        
+        }
+        System.out.println("bullshit "+nb);
+        return nb;
+    }
+    
+    public List listOccurenceCase(int x, int y){
+        List nbValide = new ArrayList();
+        nbValide.clear();
+        for(int digit=1; digit<GRID_SIZE+1;digit++){
+            if(this.DetectError(x, y, digit)==null){
+                nbValide.add(digit);
+            }
+        }
+        if(nbValide.isEmpty()){
+            return null;
+        }
+        else{
+            Collections.shuffle(nbValide);
+            return nbValide;
+        }
+    }
+    
+    public void GenCase(int x, int y){
+        List nbValide = listOccurenceCase(x,y);
+        if(nbValide != null){
+            matrix[y][x]= (int) nbValide.get(0);
+        }
+    }
+    
+    public void fillEndGrid(){
+        int a=0, b;
+        boolean fin = true;
+        while(fin){
+            if(a==-1){
+                return;
+            }
+            b=0;
+            for(int x=3; x<GRID_SIZE; x++){
+                for(int y=0;y<GRID_SIZE-3; y++){
+                    if(matrix[y][x]==0){
+                        if(nbOccurenceCase(x,y)==1){
+                            GenCase(x,y);
+                            b++;
+                        }
+                    }
+                }
+            }
+            if(b==0){
+                int[] tab = new int[36];
+                for(int i=0;i<36;i++) tab[i]=GRID_SIZE+2;
+                int numCase=0;
+                int x;
+                int y;    
+                for(int i=0; i<36;i++){
+                    x = i/6;
+                    y = i%6+3;
+                    if(matrix[y][x]==0){
+                        tab[i]=nbOccurenceCase(x,y);
+                    }
+                    if(i>0){
+                        if(tab[i-1]>tab[i]) numCase=i;
+                    }
+                }
+                GenCase((numCase%6+3),numCase/6);
+            }
+            a++;
+            if(a>30){
+                for(int x=3; x<GRID_SIZE; x++){
+                    for(int y=0; y<GRID_SIZE-3;y++){
+                        if(matrix[y][x]==0){
+                            GenCase(x,y);
+                        }
+                    }
+                }
+                if(gridFull()){
+                    fin = false;
+                }
+                else{
+                    for(int x=0;x<GRID_SIZE;x++){
+                        for(int y=0; y<GRID_SIZE;y++){
+                           matrix[y][x]=0; 
+                        }
+                    }
+                    a=-1;
+                }
+            }
+        }
+    }
+    
+    public boolean gridFull(){
+        for(int x=0; x<GRID_SIZE;x++){
+            for(int y=0; y<GRID_SIZE;y++){
+                if(matrix[y][x]==0){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public boolean checkGrid(){
+        for(int x=0; x<GRID_SIZE;x++){
+            for(int y=0; y<GRID_SIZE;y++){
+                if(DetectError(x,y,matrix[y][x])!=null) {
+                    System.out.println("GRILLE FAUX");
+                    return false;
+                }
+            }
+        }
+        System.out.println("GRILLE OK");
+        return true;
     }
 }
