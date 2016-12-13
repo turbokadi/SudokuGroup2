@@ -3,6 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/jabber/Projet/SudokuFuzion/src/sudokufuzion/Modele/Grid.java</file>
+            <file>file:/home/jabber/Projet/SudokuFuzion/src/sudokufuzion/Controler/GridEvents/ErrorEvent.java</file>
+            <file>file:/home/jabber/Projet/SudokuFuzion/src/sudokufuzion/Controler/GridEvents/MoveFocusEvent.java</file>
+            <file>file:/home/jabber/Projet/SudokuFuzion/src/sudokufuzion/Controler/GridEvents/ChangeValueEvent.java</file>
             <file>file:/home/jabber/Projet/SudokuFuzion/src/sudokufuzion/Controler/GridControler.java</file>
             <file>file:/home/jabber/Projet/SudokuFuzion/src/sudokufuzion/SudokuFuzion.java</file>
             <file>file:/home/jabber/Projet/SudokuFuzion/src/sudokufuzion/Views/mainView.java</file>

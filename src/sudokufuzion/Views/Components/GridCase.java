@@ -15,7 +15,6 @@ package sudokufuzion.Views.Components;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Point;
 import java.util.Arrays;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -58,24 +57,29 @@ public class GridCase extends JTextField {
     public void setErrorEvent(ErrorEvent errorEvent) { this.errorEvent = errorEvent; }
     
     public GridCase() {
+        
         this.setFocusable(false);
         this.setCursor(null);
         this.setSize(GridCase.CASE_WIDTH , GridCase.CASE_HEIGHT);
         this.setHorizontalAlignment(GridCase.CENTER);
         this.setFont(GridCase.BASE_FONT);
         this.setState(GridCase.BASE);  
+        this.setForeground(GridCase.BASE_COLOR);
     }
     
     public GridCase(int Width, int Height) {
+        
         this.setFocusable(false);
         this.setCursor(null);
         this.setSize( Width, Height);
         this.setHorizontalAlignment(GridCase.CENTER);
         this.setFont(GridCase.BASE_FONT);
         this.setState(GridCase.BASE);  
+        this.setForeground(GridCase.BASE_COLOR);
     }
     
     final public void setState(int State) {
+        
         try {
             switch (State) {
                 case GridCase.BASE :
@@ -89,13 +93,15 @@ public class GridCase extends JTextField {
                     this.State = GridCase.FOCUS;
                 break;
                 case GridCase.ERROR :
-                    this.previousState = this.State;
+                    if (this.State != FOCUS) this.previousState = this.State;
+                    else this.previousState = BASE;
                     this.setBorder(GridCase.ERROR_BORDER);
                     this.State = GridCase.ERROR;
                 break;
                 default :
                     throw(new Exception("Unknown Type Definition"));
             }
+            
         } catch (Exception e) {
             System.err.println("[GridCase] Failure "+Arrays.toString(e.getStackTrace()));
         }
