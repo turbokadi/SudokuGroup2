@@ -29,7 +29,8 @@ public class Grid {
                                 {0,0,0,2,0,0,0,3,0},
                                 {0,1,0,0,8,0,9,0,0}}; ;
     private final int[][] initialMatrix;
-       
+    private final int GRID_SIZE = 9;    
+    
     // Difficulty configuration
     public static final int EASY = 0, MEDIUM = 1, HARD = 2;
     private static List list = new ArrayList();
@@ -37,13 +38,15 @@ public class Grid {
     
     
     public Grid(){
+        matrix = new int[GRID_SIZE][GRID_SIZE];
+        fillGrid(EASY);
         initialMatrix=matrix.clone();
     }
     
     //Méthode pour récuperer la valeur d'une case
     //étant dans la grille de coordonnées correspondant aux paramètres
     public int getCase(int x, int y){
-        if(x<10 && y<10 && x>-1 && y >-1){return matrix[y][x];}
+        if(x<GRID_SIZE+1 && y<GRID_SIZE+1 && x>-1 && y >-1){return matrix[y][x];}
         else{ System.out.println("Wrong value"); return -1;}
     }
     
@@ -52,25 +55,22 @@ public class Grid {
     }
     
     public boolean verifyInitialValue(Point pt){ 
-        if(initialMatrix[pt.y][pt.x]!=0){
-            return true;
-        }
-        return false;
+        return initialMatrix[pt.y][pt.x]!=0;
     }
     
     
     //Méthode pour incrire un numero dans une case
     public void setCase(int x, int y, int value){
-        if(x<9 && y<9 && x>-1 && y >-1 && value<10 && value>0)
+        if(x<GRID_SIZE && y<GRID_SIZE && x>-1 && y >-1 && value<GRID_SIZE+1 && value>0)
         {
-            if(!this.DetectError(x, y, value)){ matrix[y][x]= value; }
+            if(this.DetectError(x, y, value)==null) matrix[y][x]= value;
         }
         else{ System.out.println("Wrong value");}
     }
 
     public void fillGrid(int diff){
         
-        for(int i=1;i<10;i++){
+        for(int i=1;i<GRID_SIZE+1;i++){
             list.add(i);
         }
         Collections.shuffle(list);
@@ -87,10 +87,10 @@ public class Grid {
             Collections.shuffle(list0);
             Collections.shuffle(list1);
             Collections.shuffle(list2);
-            for(int x=0;x<9;x++){
+            for(int x=0;x<GRID_SIZE;x++){
                 int T=x;
                 if(i==2){
-                    T= (x+3)%9;
+                    T= (x+3)%GRID_SIZE;
                 }
                 if(x<3){        setCase(i,T,(int)list2.get(T%3));}
                 if(x>2 && x<6){ setCase(i,T,(int)list0.get(T%3));}
@@ -114,19 +114,19 @@ public class Grid {
             }
         }
         list0.clear();list1.clear();list2.clear();
-        for(int x=3;x<9;x++) {
+        for(int x=3;x<GRID_SIZE;x++) {
             for(int y=0;y<3;y++){
-                for(int j=1;j<10;j++){
-                    if(!this.DetectError(x, y, j)){
+                for(int j=1;j<GRID_SIZE+1;j++){
+                    if(this.DetectError(x, y, j)==null){
                         setCase(x,y,j);
                     }
                 }
             }
         }
-        for(int x=3;x<9;x++) {
-            for(int y=6;y<9;y++){
-                for(int j=1;j<10;j++){
-                    if(!this.DetectError(x, y, j)){
+        for(int x=3;x<GRID_SIZE;x++) {
+            for(int y=6;y<GRID_SIZE;y++){
+                for(int j=1;j<GRID_SIZE+1;j++){
+                    if(this.DetectError(x, y, j)==null){
                         setCase(x,y,j);
                     }
                 }
@@ -139,21 +139,22 @@ public class Grid {
         System.out.println(list0);
 
     }
-    public boolean DetectError(int X, int Y, int val){
-        boolean ret = false;
-        for(int y=0; y<9; y++){
-            if(matrix[y][X]==val && y!=Y){ System.out.println("Error case : [" + (y+1) + "]" + "[" + (X+1) +"]" + "     "+ "[" + (Y+1) + "]" + "[" + (X+1) +"]"); ret = true;} //Ajouter Erreur à faire
+    public ArrayList<Point> DetectError(int X, int Y, int val){
+        ArrayList<Point> error = new ArrayList();
+        for(int y=0; y<GRID_SIZE; y++){
+            if(matrix[y][X]==val && y!=Y) error.add(new Point(X,y)); 
         }
-        for(int x=0; x<9; x++){
-            if(matrix[Y][x]==val && x!=X){ System.out.println("Error case : [" + (Y+1) + "]" + "[" + (x+1) +"]" + "     "+ "[" + (Y+1) + "]" + "[" + (X+1) +"]"); ret = true; } //Ajouter Erreur à faire
+        for(int x=0; x<GRID_SIZE; x++){
+            if(matrix[Y][x]==val && x!=X) error.add(new Point(Y,x));
         }
         int offy = Y-Y%3;
         int offx = X-X%3;
         for(int y=offy; y<offy+3;y++){
             for(int x=offx; x<offx+3; x++){
-                if(matrix[y][x]==val && y!=Y && x!=X){ System.out.println("Error case : [" + (y+1) + "]" + "[" + (x+1) +"]"+ "     "+ "[" + (Y+1) + "]" + "[" + (X+1) +"]"); ret = true; } //Ajouter Erreur à faire
+                if(matrix[y][x]==val && y!=Y && x!=X) error.add(new Point(y,x));
             }
         }
-        return ret;
+        if(error.isEmpty()) return null;
+        else return error;
     }
 }
