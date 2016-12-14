@@ -22,7 +22,8 @@ public class ChangeValueEvent extends ArrayList<Case>{ // This Class represent t
         int y=0, x=0;
         for(int[] buff: gd.getGrid()) {
             for(int bf: buff) {
-                if (bf != 0) this.add(new Case(x,y,bf,true));
+                if (bf != 0) this.add(new Case(x,y,bf,true)); // If != 0 the value is initial
+                else this.add(new Case(x,y,bf)); // If Not
                 x++;
             }
             x=0;
