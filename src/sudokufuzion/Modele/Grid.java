@@ -38,8 +38,8 @@ public class Grid {
     
     
     public Grid(){
-        fillGrid(EASY);
-        checkGrid();
+        /*fillGrid(EASY);
+        checkGrid();*/
         initialMatrix = new int[GRID_SIZE][GRID_SIZE];
         for (int y=0; y<GRID_SIZE; y++) {
             for (int x=0; x<GRID_SIZE; x++) initialMatrix[y][x] = matrix[y][x];
@@ -277,4 +277,9 @@ public class Grid {
         System.out.println("GRILLE OK");
         return true;
     }
+    
+    public boolean victory() {
+        return gridFull() && checkGrid();
+    }
+    
 }
