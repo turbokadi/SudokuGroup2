@@ -179,29 +179,25 @@ public class mainView extends javax.swing.JFrame implements Observer { // THe Cl
             GridCase gc;
             switch (Move) {
                 case UP : // Change value according to UP y-- and x
-                    gc = grid[focusedCase.y][focusedCase.x];
-                    gc.setState(gc.getPreviousState());
+                    setPreviousState();
                     if(focusedCase.y == 0) focusedCase.y = GRID_SIZE - 1; // Infinite Loop in Grid bottom to top
                     else focusedCase.y--;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
                 break;
                 case DOWN : // Change value according to UP y++ and x
-                    gc = grid[focusedCase.y][focusedCase.x];
-                    gc.setState(gc.getPreviousState());
+                    setPreviousState();
                     if(focusedCase.y == GRID_SIZE - 1) focusedCase.y = 0; // Infinite Loop in Grid top to bottom
                     else focusedCase.y++;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
                 break;
                 case LEFT : // Change value according to UP y and x--
-                    gc = grid[focusedCase.y][focusedCase.x];
-                    gc.setState(gc.getPreviousState());
+                    setPreviousState();
                     if(focusedCase.x == 0) focusedCase.x = GRID_SIZE - 1; // Infinite Loop in Grid left to right
                     else focusedCase.x--;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
                 break;
                 case RIGHT : // Change value according to UP y and x++
-                    gc = grid[focusedCase.y][focusedCase.x];
-                    gc.setState(gc.getPreviousState());
+                    setPreviousState();
                     if(focusedCase.x == GRID_SIZE - 1) focusedCase.x = 0; // Infinite Loop in Grid right to left
                     else focusedCase.x++;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
@@ -215,6 +211,11 @@ public class mainView extends javax.swing.JFrame implements Observer { // THe Cl
             e.printStackTrace();
         }
     }
+    
+    private void setPreviousState() { // Set previous State into a GridCase
+        GridCase gc = grid[focusedCase.y][focusedCase.x];
+        gc.setState(gc.getPreviousState());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panel;
@@ -226,7 +227,7 @@ public class mainView extends javax.swing.JFrame implements Observer { // THe Cl
         if ( o1 instanceof MoveFocusEvent ) moveFocus(((MoveFocusEvent) o1).getMove()); // Handle Event Move
         else if ( o1 instanceof ChangeValueEvent) setValueIntoCase((ChangeValueEvent) o1); // Handle Event Value Change
         else if ( o1 instanceof ErrorEvent) setErrorIntoCase((ErrorEvent) o1); // Handle Event Error appears
-        else modalFinPopUp(((GridControler) o).getCountTry()); // o1 = null for the Sudoku Finish
+        else modalFinalPopUp(((GridControler) o).getCountTry()); // o1 = null for the Sudoku Finish
         
     }
 
@@ -274,8 +275,12 @@ public class mainView extends javax.swing.JFrame implements Observer { // THe Cl
             GridCase buff;                                      //
             
             for (Point pt : gco.getErrorEvent()) {
-                buff = grid[pt.y][pt.x];                        // Unset Error into the satellites 
-                buff.setState(buff.getPreviousState());         //
+                buff = grid[pt.y][pt.x];                       // Unset Error into the satellites
+                
+                if (buff.getState() != GridCase.FOCUS) buff.setState(buff.getPreviousState());
+                else buff.setPreviousState(GridCase.BASE);     /* Special Comportement Needed : Error Focused have to stay 
+                                                    in Focus and set previous as Base when you delete value inside it */
+                
             } 
             
             gco.setErrorEvent(null); // Destroy ErrorEvent
@@ -285,7 +290,7 @@ public class mainView extends javax.swing.JFrame implements Observer { // THe Cl
         }        
     }
     
-    private void modalFinPopUp(int count) { // Modal Pop Up, Player Win !!!
+    private void modalFinalPopUp(int count) { // Modal Pop Up, Player Win !!!
         Object[] opt = { "Oui", "Non" };
         int ret = JOptionPane.showOptionDialog(this, "Tu as reussis en "+count+" Coups \nTu veux refaire une partie ..? ", "BRAVO Tu as Gagné !!!",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, opt, opt[1]); // Config pop UP with count
