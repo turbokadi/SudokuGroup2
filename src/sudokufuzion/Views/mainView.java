@@ -3,12 +3,13 @@
  *   //-- Create by J4BB3R<johanmaurel@gmail.com> --//
  *
  *   [Initial Date] : 08/12/2016
- *   [Last Date] : 11/12/2016
+ *   [Last Date] : 12/12/2016
  *   [Description] :
  *      This class is the game view;
  *   [Increments] :
  *      - 09/12/2016 [v0.1] : Creation of the views;
  *      - 11/12/2016 [v0.2] : Adding KeyListener for the GridControler
+ *      - 12/12/2016 [v0.3] : Modify to handle basic comportement
  * 
  **/
 
@@ -24,23 +25,23 @@ import sudokufuzion.Controler.GridEvents.ChangeValueEvent;
 import sudokufuzion.Controler.GridEvents.ErrorEvent;
 import sudokufuzion.Controler.GridEvents.MoveFocusEvent;
 
-public class mainView extends javax.swing.JFrame implements Observer{
+public class mainView extends javax.swing.JFrame implements Observer { // THe Class 
 
     // Panel Configuration
-    private final static int LOCATION_X = 57, LOCATION_Y = 57;
+    private final static int LOCATION_X = 57, LOCATION_Y = 57; // 0,0 Of the grid 
     
     // Moving Focus Configuration
-    private final static int GRID_SIZE = 9;
-    private final static int SUB_GRID_SIZE = 3;
-    public final static int UP = 0, DOWN = 2, LEFT = -1, RIGHT = 1, ERROR = -2;
+    private final static int GRID_SIZE = 9; // Grid Size in case unit
+    private final static int SUB_GRID_SIZE = 3; // Sub Grid Size in case unit
+    public final static int UP = 0, DOWN = 2, LEFT = -1, RIGHT = 1, ERROR = -2; // All move, usable from the outside, by GridControler in fact
     
     //====================//
     // Instance Attribute //
     //====================//
     
-    private GridControler gc;
+    private GridControler gc; 
     private final GridCase grid[][] = new GridCase[GRID_SIZE][GRID_SIZE];
-    private final Point focusedCase = new Point(0,0);
+    private final Point focusedCase = new Point(0,0); 
     private Point errorCase;
     
     public mainView() {}
@@ -75,17 +76,17 @@ public class mainView extends javax.swing.JFrame implements Observer{
                 
                 caseBuff.setLocation(x,y); // Setting location
                 
-                this.add(caseBuff);
+                this.add(caseBuff); // Copy Component to Context
                 
                 grid[valTabY][valTabX] = caseBuff; // Component is save into the matrix;
             }
             
-            this.add(buff);
+            this.add(buff); // Copy Component to Context
         }
       
-        focusedCase.setLocation(0,0);
-        gc.setFocusedCase(focusedCase);
-        grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
+        focusedCase.setLocation(0,0); // Set initial Location 
+        gc.setFocusedCase(focusedCase); // Give Ref@ to GridControler
+        grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS); // Set Focus into the initial Location GridCase
         
         initComponents();
     }
@@ -139,7 +140,7 @@ public class mainView extends javax.swing.JFrame implements Observer{
     }// </editor-fold>//GEN-END:initComponents
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        gc.addToTasksQueue(evt); // Push KeyEvent into the controler
+        gc.addToTasksQueue(evt); // Push KeyEvent into the Grid Controler
     }//GEN-LAST:event_formKeyPressed
 
     public static void main(String args[]) {
@@ -176,37 +177,39 @@ public class mainView extends javax.swing.JFrame implements Observer{
         try {
             GridCase gc;
             switch (Move) {
-                case UP :
+                case UP : // Change value according to UP y-- and x
                     gc = grid[focusedCase.y][focusedCase.x];
                     gc.setState(gc.getPreviousState());
-                    if(focusedCase.y == 0) focusedCase.y = GRID_SIZE - 1;
+                    if(focusedCase.y == 0) focusedCase.y = GRID_SIZE - 1; // Infinite Loop in Grid bottom to top
                     else focusedCase.y--;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
                 break;
-                case DOWN :
+                case DOWN : // Change value according to UP y++ and x
                     gc = grid[focusedCase.y][focusedCase.x];
                     gc.setState(gc.getPreviousState());
-                    if(focusedCase.y == GRID_SIZE - 1) focusedCase.y = 0;
+                    if(focusedCase.y == GRID_SIZE - 1) focusedCase.y = 0; // Infinite Loop in Grid top to bottom
                     else focusedCase.y++;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
                 break;
-                case LEFT :
+                case LEFT : // Change value according to UP y and x--
                     gc = grid[focusedCase.y][focusedCase.x];
                     gc.setState(gc.getPreviousState());
-                    if(focusedCase.x == 0) focusedCase.x = GRID_SIZE - 1;
+                    if(focusedCase.x == 0) focusedCase.x = GRID_SIZE - 1; // Infinite Loop in Grid left to right
                     else focusedCase.x--;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
                 break;
-                case RIGHT :
+                case RIGHT : // Change value according to UP y and x++
                     gc = grid[focusedCase.y][focusedCase.x];
                     gc.setState(gc.getPreviousState());
-                    if(focusedCase.x == GRID_SIZE - 1) focusedCase.x = 0;
+                    if(focusedCase.x == GRID_SIZE - 1) focusedCase.x = 0; // Infinite Loop in Grid right to left
                     else focusedCase.x++;
                     grid[focusedCase.y][focusedCase.x].setState(GridCase.FOCUS);
                 break;
                 default :
                     throw(new Exception(new Throwable("[mainView] MovingFocus Error unknow command.")));
-            } this.gc.setFocusedCase(focusedCase);
+                    
+            } // *
+            
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -217,62 +220,65 @@ public class mainView extends javax.swing.JFrame implements Observer{
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void update(Observable o, Object o1) {
+    public void update(Observable o, Object o1) { // Observer update method, it's running when GridControler have notify view
         
-        if ( o1 instanceof MoveFocusEvent ) moveFocus(((MoveFocusEvent) o1).getMove());
-        else if ( o1 instanceof ChangeValueEvent) setValueIntoCase((ChangeValueEvent) o1);
-        else if ( o1 instanceof ErrorEvent) setErrorIntoCase((ErrorEvent) o1);
+        if ( o1 instanceof MoveFocusEvent ) moveFocus(((MoveFocusEvent) o1).getMove()); // Handle Event Move
+        else if ( o1 instanceof ChangeValueEvent) setValueIntoCase((ChangeValueEvent) o1); // Handle Event Value Change
+        else if ( o1 instanceof ErrorEvent) setErrorIntoCase((ErrorEvent) o1); // Handle Event Error appears
         
     }
 
     private void setValueIntoCase(ChangeValueEvent evt) {
         GridCase g;
-        for (Case c: evt) {
+        for (Case c: evt) { // For Each Element to Change
             if (c.value != 0) {
-                if (c.getInitial()) {
+                if (c.getInitial()) { // Set Initial Case as Initialisation of the GridControler
                     g = grid[c.y][c.x];
                     g.setText(String.valueOf(c.value));
                     g.setForeground(GridCase.NON_MODIFABLE_COLOR);
-                } else {
-                    if (errorCase != null) this.unsetErrorIntoCase();
+                } else { // Set Normal Value Case
+                    if (errorCase != null ) this.unsetErrorIntoCase(); // unset previous displayed Error
                     grid[c.y][c.x].setText(String.valueOf(c.value));
                 }
+            } else { // Set blank value when press on Suppr = 0
+                if (errorCase != null ) this.unsetErrorIntoCase(); // unset previous displayed Error
+                grid[c.y][c.x].setText(""); // Blank Value
             }
         }
     }
     
     public void setErrorIntoCase(ErrorEvent ev) {
         
-        this.unsetErrorIntoCase();
+        this.unsetErrorIntoCase(); // unset previous displayed Error
         
-        Point initialCase = ev.getInitialCase();
-        errorCase = initialCase;
-        GridCase gcn = grid[errorCase.y][errorCase.x];
-        gcn.setErrorEvent(ev);
-        gcn.setColorErrorInitialCase();
+        Point initialCase = ev.getInitialCase();                // Set Error into the Case who generate the error
+        errorCase = initialCase;                                //
+        GridCase gcn = grid[errorCase.y][errorCase.x];          //
+        gcn.setErrorEvent(ev);                                  //
+        gcn.setColorErrorInitialCase();                         //
         
         ev.stream().forEach((pt) -> {
-            grid[pt.y][pt.x].setState(GridCase.ERROR);
+            grid[pt.y][pt.x].setState(GridCase.ERROR);          // Set Error into the satellites 
         });
         
     }
     
     public void unsetErrorIntoCase() {
-        if (errorCase != null) {
+        if (errorCase != null) {    // If previous exist 
             
-            GridCase gco = grid[errorCase.y][errorCase.x];
-            gco.unsetColorErrorInitialCase();
-            gco.setPreviousText();
-            GridCase buff;
+            GridCase gco = grid[errorCase.y][errorCase.x];      // Unset Error into the Case who generate the error
+            gco.unsetColorErrorInitialCase();                   //
+            gco.setPreviousText();                              //
+            GridCase buff;                                      //
             
             for (Point pt : gco.getErrorEvent()) {
-                buff = grid[pt.y][pt.x];
-                buff.setState(buff.getPreviousState());
+                buff = grid[pt.y][pt.x];                        // Unset Error into the satellites 
+                buff.setState(buff.getPreviousState());         //
             } 
             
-            gco.setErrorEvent(null);
+            gco.setErrorEvent(null); // Destroy ErrorEvent
             
-            errorCase = null;
+            errorCase = null; // No Error Remaining
             
         }        
     }
