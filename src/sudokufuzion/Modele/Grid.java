@@ -1,13 +1,17 @@
 /**
 
  * //--Create by nico <nicolascorronel@gmail.com>;--//
- * [Contributors] none;
  * [Initial Date]: 09/12/2016
  * [Last Date]: 09/12/2016
  * [Description]:
  *      - This class is the Grid of the Sudoku;
  * [Increments]:
- *      - 09/12/2016[v0.1]: Creation of basic method
+ *      - 09/12/2016[v0.1]: Coding of basic method
+ *      - 11/12/2016[v0.2]: Coding of Assessor
+ *      - 12/12/2016[v0.3]: Creation of fillGrid,GenCase
+ *                              ,listOccurence,nbOccurence, DetectError;
+ *      - 13/12/2016[v0.4]: Coding fillGrid, Creation fillEndGrid
+ *      - 14/12/2016[v1.0]: End all methods
  
  */
  
@@ -19,25 +23,8 @@ import java.util.List;
 
 public class Grid {
     // Grid 
-    private int[][] matrix2 =   {{0,2,3,0,0,0,0,6,0},
-                                {0,0,0,0,0,0,0,8,0},
-                                {0,4,0,3,2,9,0,0,7},
-                                {0,0,0,7,0,0,6,0,9},
-                                {0,8,2,0,0,6,0,4,0},
-                                {6,0,0,0,3,0,5,1,0},
-                                {9,0,5,0,0,1,0,0,2},
-                                {0,0,0,2,0,0,0,3,0},
-                                {0,1,0,0,8,0,9,0,0}};
-    
-    private int[][] matrix =   {{2,9,6,3,1,8,5,7,4},
-                                {5,8,4,9,7,2,6,1,3},
-                                {7,1,3,6,4,5,2,8,9},
-                                {6,2,5,8,9,7,3,4,1},
-                                {9,3,1,4,2,6,8,5,7},
-                                {4,7,8,5,3,1,9,2,6},
-                                {1,6,7,2,5,3,4,9,8},
-                                {8,5,9,7,6,4,1,3,0},
-                                {3,4,2,1,8,9,7,0,0}};
+    private int[][] matrix;
+    private int diff; //difficulty
     
     private final int[][] initialMatrix; //Matrix of the initial matrix we cannot change
     private final int GRID_SIZE = 9;    //Size of the sudoku
@@ -49,7 +36,8 @@ public class Grid {
     
     
     public Grid(){          //Builder of the class Grid and init final initialMatrix 
-        fillGrid(EASY);     //this method is here to fill the grid
+        diff = MEDIUM;
+        fillGrid();     //this method is here to fill the grid
         //checkGrid();        //this method verify if the grid is correct and if there is no error in
         initialMatrix = new int[GRID_SIZE][GRID_SIZE];  //Instanciation of the initialMatrix in a array of int
         
@@ -99,11 +87,20 @@ public class Grid {
         }
         return list; //return the list, this represents the case in conflict
     }
+    
+    //set case to zero
+    //for the HMI, its like erase a case
+    public void setCaseZero(int x, int y){
+        if(initialMatrix[y][x]==0){ //Be sure to not erase an initial value
+            matrix[y][x]=0;      
+        }
+        
+    }
 
     
     //This method fill the entire Grid randomly, using arrayList and shuffling of Collection
     //The parameter represents the difficulty of the grid (New Feature)
-    public void fillGrid(int diff){ 
+    public void fillGrid(){ 
         do{ 
             matrix = new int[9][9];         //init matrix 9 by 9
             list.clear();                   //clear the list to be sure, there is no error
@@ -155,6 +152,7 @@ public class Grid {
                                                                         //of possibilities to end the filling of the grid
             fillEndGrid();          //Ending of the filling grid
         }while(!gridFull());        //If the method fillEndGrid doesn't fill the entire grid, it repeat until it fill it entirely  
+        removeValueGrid();
     }
     
     //This method return all points in conflict with matrix[Y][X]
@@ -267,6 +265,21 @@ public class Grid {
                     }
                 }
                 fin=false;      //set fin false to end the while
+            }
+        }
+    }
+    
+    //Remove value of the grid at the end of the generation of the grid
+    //this method takes care of the difficulty
+    public void removeValueGrid(){
+        for(int subGrid=0;subGrid<9;subGrid++){
+            int numberOfRemoveCase= 4 +diff +(int)(Math.random());
+            for(int remove=0; remove<numberOfRemoveCase;remove++){
+                int randomCase = (int) (Math.random()*8);
+                while(matrix[randomCase/3+(subGrid/3)*3][randomCase%3+(subGrid*3)%9]==0){
+                    randomCase = 1+(int) (Math.random()*8);
+                }
+                matrix[randomCase/3+(subGrid/3)*3][randomCase%3+(subGrid*3)%9]=0;
             }
         }
     }

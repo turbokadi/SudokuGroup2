@@ -91,6 +91,7 @@ public class GridControler extends Observable{ // This Class implements an Obser
                 if (!grid.verifyInitialValue(focusedCase)) { // Verify if the case is an non modifiable grid case
                     
                     sendChangeValueEvent(focusedCase, 0); // send change zero to assign a null string into the grid case
+                    grid.setCaseZero(focusedCase.x,focusedCase.y);  // Set zero into the matrix case
                     
                 }
             }
