@@ -58,21 +58,19 @@ public class GridCase extends JTextField { /* It's an JTextField modified to hav
     public void setErrorEvent(ErrorEvent errorEvent) { this.errorEvent = errorEvent; }
     
     public GridCase() { // Configuration 
+        this.setConfig();
+    }
+    
+    public GridCase(int Width, int Height) { // Alternative Configuration
+        this.setConfig();
+        this.setSize( Width, Height);
+    }
+    
+    private void setConfig() {
         
         this.setFocusable(false); // Deny focus to disable keyboard entry
         this.setCursor(null); // Deny cursor hover modification
         this.setSize(GridCase.CASE_WIDTH , GridCase.CASE_HEIGHT);
-        this.setHorizontalAlignment(GridCase.CENTER);
-        this.setFont(GridCase.BASE_FONT);
-        this.setState(GridCase.BASE);  
-        this.setForeground(GridCase.BASE_COLOR);
-    }
-    
-    public GridCase(int Width, int Height) { // Alternative Configuration
-        
-        this.setFocusable(false);
-        this.setCursor(null);
-        this.setSize( Width, Height);
         this.setHorizontalAlignment(GridCase.CENTER);
         this.setFont(GridCase.BASE_FONT);
         this.setState(GridCase.BASE);  
@@ -125,7 +123,9 @@ public class GridCase extends JTextField { /* It's an JTextField modified to hav
         super.setText(string); // Set the Text via it parent
     }
     
-    public void setPreviousText() { this.setText(previousText); } 
+    public void setPreviousText() { this.setText(previousText); }
+    
+    public void setPreviousState(int State ) { this.previousState = State; }
     
     private void setStateProcess(int state, Border border) {
         
