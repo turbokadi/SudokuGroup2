@@ -19,6 +19,7 @@ import sudokufuzion.Views.Components.GridCase;
 import java.awt.Point;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JOptionPane;
 import sudokufuzion.Controler.GridControler;
 import sudokufuzion.Controler.GridEvents.Case;
 import sudokufuzion.Controler.GridEvents.ChangeValueEvent;
@@ -225,6 +226,7 @@ public class mainView extends javax.swing.JFrame implements Observer { // THe Cl
         if ( o1 instanceof MoveFocusEvent ) moveFocus(((MoveFocusEvent) o1).getMove()); // Handle Event Move
         else if ( o1 instanceof ChangeValueEvent) setValueIntoCase((ChangeValueEvent) o1); // Handle Event Value Change
         else if ( o1 instanceof ErrorEvent) setErrorIntoCase((ErrorEvent) o1); // Handle Event Error appears
+        else modalFinPopUp(((GridControler) o).getCountTry()); // o1 = null for the Sudoku Finish
         
     }
 
@@ -281,6 +283,14 @@ public class mainView extends javax.swing.JFrame implements Observer { // THe Cl
             errorCase = null; // No Error Remaining
             
         }        
+    }
+    
+    private void modalFinPopUp(int count) { // Modal Pop Up, Player Win !!!
+        Object[] opt = { "Oui", "Non" };
+        int ret = JOptionPane.showOptionDialog(this, "Tu as reussis en "+count+" Coups \nTu veux refaire une partie ..? ", "BRAVO Tu as Gagné !!!",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, opt, opt[1]); // Config pop UP with count
+        if (ret == 0) gc.reloadNewGrid(); // reload a New Grid
+        else System.exit(0); // Qwick and Dirty ;)
     }
     
 }
