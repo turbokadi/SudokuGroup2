@@ -51,7 +51,16 @@ public class GridControler extends Observable{ // This Class implements an Obser
     private Point focusedCase; // It's the Coordinates of the case who is focused on the GUI 
     private ConcurrentLinkedQueue<KeyEvent> queue; // The task Queue
     private final Thread Th = new Thread(th); // The Thread Declaration
-    private final Grid grid = new Grid(); // Model Grid Declaration + Instanciation
+    private Grid grid = new Grid(); // Model Grid Declaration + Instanciation
+    private int countTry = 0;
+
+    public int getCountTry() {
+        return countTry;
+    }
+
+    public void setCountTry(int countTry) {
+        this.countTry = countTry;
+    }
     
     public GridControler() {
         this.queue = new ConcurrentLinkedQueue<>(); 
@@ -88,6 +97,8 @@ public class GridControler extends Observable{ // This Class implements an Obser
             else if(val >= KeyEvent.VK_NUMPAD1 && val <= KeyEvent.VK_NUMPAD9) { // Detect if is a pav num Key
                 if (!grid.verifyInitialValue(focusedCase)) { // Verify if the case is an non modifiable grid case 
                     
+                    countTry++;
+                    
                     int keyValue = val - KeyEvent.VK_NUMPAD0; // Value of the key compare to 0 ID value
                     
                     sendChangeValueEvent(focusedCase, keyValue); // send change val to assign the value into the grid case
@@ -102,7 +113,7 @@ public class GridControler extends Observable{ // This Class implements an Obser
                         
                     } else {
                         
-                        if (grid.victory()) ; // On WORK
+                        if (grid.victory()) this.notifyObservers(null);
                         
                     }
                     
@@ -147,6 +158,12 @@ public class GridControler extends Observable{ // This Class implements an Obser
     public void notifyObservers(Object o1) { // Method who simplify notification process
         this.setChanged();
         super.notifyObservers(o1);
+    }
+    
+    public void reloadNewGrid() {
+        grid = new Grid(); // New Grid
+        notifyObservers(new ChangeValueEvent().putGridIntoArrayList(grid)); // Initial Loading of the matrix
+        countTry = 0;
     }
     
 }
