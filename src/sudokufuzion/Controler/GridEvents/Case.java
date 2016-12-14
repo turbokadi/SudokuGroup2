@@ -16,7 +16,7 @@ package sudokufuzion.Controler.GridEvents;
 public class Case {
     
     public int x, y, value;
-    private boolean initial = false; // It's true if the case is an initial on modifiable case the sudoku
+    private boolean initial = false; // It's true if the case is an initial non modifiable case the sudoku
     
     public Case(int x, int y, int value) { 
         this.x = x;
