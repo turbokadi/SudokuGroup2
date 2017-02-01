@@ -1,4 +1,7 @@
 # Projet Sudoku 3IL Ingenieur
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9815384c2be34895b5556012c3bcce66)](https://www.codacy.com/app/J4BB3R/SudokuGroup2?utm_source=github.com&utm_medium=referral&utm_content=J4BB3R/SudokuGroup2&utm_campaign=badger)
+
 Groupe2 promo 2016
 
 # Régles relative à Git
