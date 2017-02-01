@@ -1,7 +1,7 @@
 # Projet Sudoku 3IL Ingenieur
 Groupe2 promo 2016
 
-Codacy Code Quality Grade [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9815384c2be34895b5556012c3bcce66)](https://www.codacy.com/app/J4BB3R/SudokuGroup2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=J4BB3R/SudokuGroup2&amp;utm_campaign=Badge_Grade)
+Codacy Code Quality Grade  :  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9815384c2be34895b5556012c3bcce66)](https://www.codacy.com/app/J4BB3R/SudokuGroup2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=J4BB3R/SudokuGroup2&amp;utm_campaign=Badge_Grade)
 
 # Régles relative à Git
   - On bosse sur des branches, pas de glands sur le master
