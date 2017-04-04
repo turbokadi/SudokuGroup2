@@ -1,4 +1,7 @@
 # Projet Sudoku 3IL Ingenieur
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9815384c2be34895b5556012c3bcce66)](https://www.codacy.com/app/J4BB3R/SudokuGroup2?utm_source=github.com&utm_medium=referral&utm_content=J4BB3R/SudokuGroup2&utm_campaign=badger)
+
 Groupe2 promo 2016
 
 Codacy Code Quality Grade  :  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b507f23b8eeb4da0b49b7f4385b1fc3f)](https://www.codacy.com/app/J4BB3R/SudokuGroup2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=J4BB3R/SudokuGroup2&amp;utm_campaign=Badge_Grade)
